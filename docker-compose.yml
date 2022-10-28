@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  redis:
+    ports:
+      - "6379:6379"
+    image: "redislabs/redistimeseries"
+  
+  grafana:
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_INSTALL_PLUGINS=redis-datasource
+    image: "grafana/grafana"
+    links:
+      - "redis:redis"
