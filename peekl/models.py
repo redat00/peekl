@@ -41,7 +41,22 @@ class Website:
     interval: int = 30
     certificate_monitoring: bool = False
     certificate_monitoring_interval: int = 30
-    non_acceptable_status: List = field(default_factory=lambda: [200])
+    cert_warning: int = 30
+    cert_critical: int = 5
+    non_acceptable_status: List = field(
+        default_factory=lambda: [
+            400,
+            401,
+            402,
+            403,
+            404,
+            405,
+            406,
+            407,
+            408,
+            410,
+        ]
+    )
 
     def generate_hostname(self) -> str:
         """Generate a hostname from url.

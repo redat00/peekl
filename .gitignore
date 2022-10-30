@@ -168,3 +168,5 @@ cython_debug/
 # Peekl specified .gitignore
 
 sample.yml
+sample.yaml
+config.yaml

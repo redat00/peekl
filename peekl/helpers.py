@@ -1,12 +1,9 @@
-from datetime import datetime
-from time import sleep
+from os import path
 from urllib.request import socket, ssl
 
 from dacite import from_dict
-from requests import get
 from yaml import safe_load
 
-from peekl.database import RedisHandler
 from peekl.models import Config, Website
 
 
@@ -41,36 +38,11 @@ def get_certificate(website: Website) -> dict:
             return ssock.getpeercert()
 
 
-def status_poller(website: Website, redis_handler: RedisHandler) -> None:
-    """Get status from a website.
+def get_templates_dir() -> str:
+    """Used to get alert managers templates directory path.
 
-    Args:
-        website: An instanciated Website object
-        redis_handler: An instanciated RedisHandler used to push data
+    Returns:
+        str: Path to the templates directory
     """
-    while True:
-        headers = {"User-Agent": "peekl/http-monitoring"}
-        req = get(website.url, headers=headers)
-        redis_handler.insert_data(
-            name=website.generate_timeseries_name(), value=req.status_code
-        )
-        sleep(website.interval)
-
-
-def cert_validity_poller(website: Website, redis_handler: RedisHandler) -> None:
-    """Get validity from certificate and push it to Redis.
-
-    Args:
-        website: An instanciated Website object
-        redis_handler: An instanciated RedisHandler used to push data
-    """
-    while True:
-        certificate = get_certificate(website=website)
-        certificate_date = datetime.strptime(
-            certificate["notAfter"], "%b %d %H:%M:%S %Y %Z"
-        )
-        redis_handler.insert_data(
-            name=f"cert_{website.generate_timeseries_name()}",
-            value=(certificate_date - datetime.now()).days,
-        )
-        sleep(website.certificate_monitoring_interval)
+    root_dir = path.dirname(path.abspath(__file__))
+    return path.join(root_dir, "alertmanager/templates/")

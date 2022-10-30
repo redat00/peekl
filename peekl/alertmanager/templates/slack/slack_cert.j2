@@ -1,0 +1,44 @@
+{
+	"attachments": [
+		{
+			{% if level == "warning" %}
+				"color": "#ebeb3d",
+			{% elif level == "critical" %}
+				"color": "#eb463d",
+			{% endif %}
+			"blocks": [
+				{
+					"type": "section",
+					"text": {
+						"type": "mrkdwn",
+						{% if level == "warning" %}
+							"text": ":warning: *{{ level.upper() }}!*"
+						{% elif level == "critical" %}
+							"text": ":no_entry: *{{ level.upper() }}!*"
+						{% endif %}
+					}
+				},
+				{
+					"type": "section",
+					"text": {
+						"type": "mrkdwn",
+						"text": "_Certificate is about to expire_"
+					}
+				},
+				{
+					"type": "section",
+					"fields": [
+						{
+							"type": "mrkdwn",
+							"text": "*Website*:\n{{ website }}"
+						},
+						{
+							"type": "mrkdwn",
+							"text": "*Remaining days*:\n{{ remaining_days }}"
+						}
+					]
+				}
+			]
+		}
+	]
+}
