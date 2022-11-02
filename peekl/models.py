@@ -27,9 +27,9 @@ class AlertManagers:
 class RedisConfig:
     """RedisConfig models."""
 
-    host: str
-    port: int
-    db: int
+    host: str = "127.0.0.1"
+    port: int = 6379
+    db: int = 0
 
 
 @dataclass

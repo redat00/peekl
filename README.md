@@ -16,6 +16,10 @@
     - [The Docker way](#the-docker-way)
     - [The manual installation way](#the-manual-installation-way)
 4. [Configuration](#configuration)
+    - [Redis](#redis-configuration)
+    - [Websites](#websites-configuration)
+    - [Alert managers](#alert-managers-configuration)
+      - [Slack](#slack-integration)
 
 ## Get started
 
@@ -146,4 +150,62 @@ sudo systemctl enable peekl.service
 
 ## Configuration
 
-TODO
+Peekl configuration file is formatted using YAML. It is divided in multiples part. Here is a small sample of what a configuration file would look like. 
+
+```yaml
+---
+
+redis:
+  host: 127.0.0.1
+  port: 6379
+  db: 0
+
+websites:
+  - url: https://example.com
+    port: 443
+
+alertmanagers:
+  slack:
+    webhook: https://hooks.slack.com/services/xxxx
+```
+### Redis configuration
+
+The first part of this file is the Redis part. Here we define all the parameters for our application to connect to Redis.
+
+| Parameters name | Value | Default |
+|-----------------|-------|---------|
+| host | Hostname used to access the Redis instance. It can be an IP address or a hostname     | 127.0.0.1 |
+| port | Port of the Redis instance as an integer | 6379 |
+| db | Index of the Redis database to use as an integer | 0 |
+
+> :warning: It is not possible to use Redis authentication for now
+
+### Websites configuration
+
+The website configurations section is where you will define all the website you want to monitor with the differents threshold and parameters.
+
+| Parameters name | Value | Default | Required |
+|-----------------|-------|---------| -------- |
+| url | URL of the website you want to monitor. You should specify the scheme at the beginning (https:// or http://). It can also contain a path. | - | Yes |
+| port | Port that the URL should be accessed on as an integer | - | Yes |
+| interval | Interval that the website should be checked on in seconds as an integer | 30 | No |
+| retry | Number of time we should retry to get the status of the website before sending an alert to prevent flapping | 1 | No |
+| certificate_monitoring | True if you also want to monitor the certificate, False if not | False | No |
+| certificate_monitoring_interval | Interval that the certificate should be checked on in seconds as integer | 30 | No |
+| cert_warning | Number of days remaining on the certificate validity should a warning be sent as an integer | 30 | No |
+| cert_critical | Number of days remaining on the certificate validity should a critical be sent as an integer | 5 | No |
+| non_acceptable_status | List of HTTP status code that should raise an error | [400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410] | No |
+
+### Alert managers configuration
+
+The last part of the configuration file is in regards of the alert manager. Those are used to send alert to your preferred solution.
+
+#### Supported integrations
+| Name | Description |
+|------| ----------- |
+| [Slack](https://slack.com/) | The slack integration can be used through webhooks. Learn more about Slack webhooks and how to create one here : [Sending messages using Incoming Webhooks](https://api.slack.com/messaging/webhooks) |
+
+#### Slack integration
+| Parameters name | Value | Default | Required |
+|-----------------|-------|---------| -------- |
+| webhook | URL of the webhook to sent alert to | - | Yes |
