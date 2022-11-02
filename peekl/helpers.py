@@ -1,9 +1,9 @@
 from os import path
+from typing import Optional
 from urllib.request import socket, ssl
 
 from dacite import from_dict
 from yaml import safe_load
-from typing import Optional
 
 from peekl.models import Config, Website
 
