@@ -39,6 +39,7 @@ class Website:
     url: str
     port: int
     interval: int = 30
+    retry: int = 1
     certificate_monitoring: bool = False
     certificate_monitoring_interval: int = 30
     cert_warning: int = 30

@@ -21,6 +21,7 @@ class Slack:
             self._cert_template = Template(f.read())
         with open(f"{get_templates_dir()}slack/slack_ok.j2") as f:
             self._ok_template = Template(f.read())
+        self.manager_type = config.manager_type
 
     def _generate_message(self):
         pass
@@ -53,12 +54,23 @@ class Slack:
         """Send CERT alert to slack.
 
         Args:
-            message: Message that the alerts should contain
             level: str level of the alert (critical or warning)
+            remaining_days: number of days before certificates expire
+            website: Website instanciated object
         """
         message = self._cert_template.render(
             level=level,
             remaining_days=remaining_days,
             website=website.url,
         )
+        self._send_alert(message)
+
+    def send_alert_ok(self, type: str, website: Website) -> None:
+        """Send OK alert to slack.
+
+        Args:
+            type: type of alert that is now OK (can be "cert" or "http")
+            website: Website instanciated object
+        """
+        message = self._ok_template.render(type=type, website=website.url)
         self._send_alert(message)

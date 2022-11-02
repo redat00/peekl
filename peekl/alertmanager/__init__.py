@@ -1,4 +1,5 @@
 from dataclasses import asdict
+from datetime import datetime
 from typing import Any
 
 from dacite import from_dict
@@ -60,11 +61,21 @@ class AlertManager:
             website: An instanciated Website object
         """
         for am in self._ams:
-            am.send_alert_http(
-                level=level,
-                status_code=status_code,
-                website=website,
-            )
+            if not self._redis_handler.check_key_exists(
+                f"http_{am.manager_type}_{website.generate_timeseries_name()}"
+            ):
+                am.send_alert_http(
+                    level=level,
+                    status_code=status_code,
+                    website=website,
+                )
+                self._redis_handler.insert_data(
+                    name=(
+                        f"http_{am.manager_type}_"
+                        f"{website.generate_timeseries_name()}"
+                    ),
+                    data=f"{datetime.now().strftime('%d-%m-%Y %H:%M:%S')}",
+                )
 
     def send_alert_cert(
         self, level: str, remaining_days: int, website: Website
@@ -76,8 +87,33 @@ class AlertManager:
             level: str level of the alert (critical or warning)
         """
         for am in self._ams:
-            am.send_alert_cert(
-                level=level,
-                remaining_days=remaining_days,
-                website=website,
+            if not self._redis_handler.check_key_exists(
+                f"cert_{am.manager_type}_{website.generate_timeseries_name()}"
+            ):
+                am.send_alert_cert(
+                    level=level,
+                    remaining_days=remaining_days,
+                    website=website,
+                )
+                self._redis_handler.insert_data(
+                    name=(
+                        f"cert_{am.manager_type}_"
+                        f"{website.generate_timeseries_name()}"
+                    ),
+                    data=f"{datetime.now().strftime('%d-%m-%Y %H:%M:%S')}",
+                )
+
+    def send_alert_ok(self, type: str, website: Website) -> None:
+        """Send an OK alert and clear redis key.
+
+        Args:
+            type: can be either "cert" or "http"
+        """
+        for am in self._ams:
+            am.send_alert_ok(type=type, website=website)
+            self._redis_handler.delete_data(
+                name=(
+                    f"{type}_{am.manager_type}_"
+                    f"{website.generate_timeseries_name()}"
+                )
             )

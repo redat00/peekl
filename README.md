@@ -12,3 +12,17 @@
 <p style="font-size: 20px"> 
 	Peekl (pronounced like pickle) is a small and simple HTTP smoke-ping like application developed in Python, using Redis TimeSeries for storing data.
 </p>
+
+
+```bash
+Usage: peekl [OPTIONS]
+
+  Main command entrypoint for Peekl.
+
+  Args:     config_file: str representation of a file path
+
+Options:
+  -c, --config-file PATH  path of the configuration file of the application
+                          [required]
+  --help                  Show this message and exit.
+```

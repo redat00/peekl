@@ -21,15 +21,36 @@ def status_poller(
     """
     while True:
         headers = {"User-Agent": "peekl/http-monitoring"}
-        req = get(website.url, headers=headers)
-        if req.status_code in website.non_acceptable_status:
-            alert_manager.send_alert_http(
-                level="critical",
-                status_code=req.status_code,
+        initial_request = get(website.url, headers=headers)
+        status_code = initial_request.status_code
+        if status_code in website.non_acceptable_status:
+            # For every entry inside of the website.retry attributes, will
+            # fetch the website and set the status_code variable to his newly
+            # obtain status_code
+            for _ in range(website.retry):
+                req = get(website.url, headers=headers)
+                status_code = req.status_code
+            # If status_code that has now the value of the last retry is still
+            # in the non_acceptable_status, then now we will send an alert
+            if status_code in website.non_acceptable_status:
+                alert_manager.send_alert_http(
+                    level="critical",
+                    status_code=initial_request.status_code,
+                    website=website,
+                )
+        elif (
+            status_code not in website.non_acceptable_status
+            and redis_handler.check_key_exists(
+                f"http_*_{website.generate_timeseries_name()}"
+            )
+        ):
+            alert_manager.send_alert_ok(
+                type="http",
                 website=website,
             )
         redis_handler.insert_timeseries_data(
-            name=website.generate_timeseries_name(), value=req.status_code
+            name=website.generate_timeseries_name(),
+            value=status_code,
         )
         sleep(website.interval)
 
@@ -61,6 +82,13 @@ def cert_validity_poller(
                 alert_manager.send_alert_cert(
                     level="warning",
                     remaining_days=days_remaining,
+                    website=website,
+                )
+            case _ if redis_handler.check_key_exists(
+                f"cert_*_{website.generate_timeseries_name()}"
+            ):
+                alert_manager.send_alert_ok(
+                    type="cert",
                     website=website,
                 )
         redis_handler.insert_timeseries_data(

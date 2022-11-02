@@ -31,7 +31,9 @@ def get_certificate(website: Website) -> dict:
         dict: certificate as dict
     """
     context = ssl.create_default_context()
-    with socket.create_connection((website.generate_hostname(), website.port)) as sock:
+    with socket.create_connection(
+        (website.generate_hostname(), website.port)
+    ) as sock:
         with context.wrap_socket(
             sock, server_hostname=website.generate_hostname()
         ) as ssock:
