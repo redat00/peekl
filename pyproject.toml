@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "peekl"
-version = "0.1.0"
+version = "1.0.0"
 description = ""
 authors = ["Your Name <you@example.com>"]
 readme = "README.md"
@@ -12,7 +12,7 @@ packages = [
 peekl = "peekl.__main__:main"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = ">=3.10,<3.11"
 requests = "^2.28.1"
 PyYAML = "^6.0"
 dacite = "^1.6.0"
@@ -26,6 +26,7 @@ Jinja2 = "^3.1.2"
 flake8 = "^5.0.4"
 black = "^22.10.0"
 isort = "^5.10.1"
+pytype = "^2022.10.26"
 
 [build-system]
 requires = ["poetry-core"]

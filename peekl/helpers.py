@@ -3,6 +3,7 @@ from urllib.request import socket, ssl
 
 from dacite import from_dict
 from yaml import safe_load
+from typing import Optional
 
 from peekl.models import Config, Website
 
@@ -21,7 +22,7 @@ def load_config(config_path: str) -> Config:
     return from_dict(data_class=Config, data=data)
 
 
-def get_certificate(website: Website) -> dict:
+def get_certificate(website: Website) -> Optional[dict]:
     """Get certificate for a given website.
 
     Args:
