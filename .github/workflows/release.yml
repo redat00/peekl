@@ -1,6 +1,6 @@
 ---
 
-name: "release"
+name: "Peekl CI"
 
 on:
   push:
