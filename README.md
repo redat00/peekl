@@ -202,9 +202,17 @@ The last part of the configuration file is in regards of the alert manager. Thos
 #### Supported integrations
 | Name | Description |
 |------| ----------- |
-| [Slack](https://slack.com/) | The slack integration can be used through webhooks. Learn more about Slack webhooks and how to create one here : [Sending messages using Incoming Webhooks](https://api.slack.com/messaging/webhooks) |
+| [Slack](https://slack.com/) | The Slack integration can be used through webhooks. Learn more about Slack webhooks and how to create one here : [Sending messages using Incoming Webhooks](https://api.slack.com/messaging/webhooks) |
+|[Discord](https://discord.com/)| The Discord integration can be used through webhooks. Learn more about Discord webhooks and how to create one here: [Intro to Webhooks](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks) |
 
 #### Slack integration
 | Parameters name | Value | Default | Required |
 |-----------------|-------|---------| -------- |
 | webhook | URL of the webhook to sent alert to | - | Yes |
+
+
+#### Discord integration
+| Parameters name | Value | Default | Required |
+| --------------- | ----- | ------- | -------- |
+| webhook | URL of the webhook to sent alert to | - | Yes |
+| username | Username you want the webhook to de displayed with | Peekl | No |

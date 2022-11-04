@@ -17,10 +17,18 @@ class SlackConfig(AlertManagerConfigSkel):
 
 
 @dataclass
+class DiscordConfig(AlertManagerConfigSkel):
+    webhook: str
+    username: str = "Peekl"
+    manager_type: str = "discord"
+
+
+@dataclass
 class AlertManagers:
     """AlertManagers models."""
 
     slack: Optional[SlackConfig]
+    discord: Optional[DiscordConfig]
 
 
 @dataclass

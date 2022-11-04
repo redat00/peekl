@@ -4,15 +4,17 @@ from typing import Any
 
 from dacite import from_dict
 
+from peekl.alertmanager.discord import Discord
 from peekl.alertmanager.slack import Slack
 from peekl.database import RedisHandler
-from peekl.models import AlertManagers, SlackConfig, Website
+from peekl.models import AlertManagers, DiscordConfig, SlackConfig, Website
 
 # alert_manager_mapper:
 # Used to map a alert_manager type (an str) to it's corresponding class object
 # as well as it's corresponding config models.
 alert_manager_mapper = {
     "slack": [Slack, SlackConfig],
+    "discord": [Discord, DiscordConfig],
 }
 
 

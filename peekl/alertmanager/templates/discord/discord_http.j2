@@ -1,0 +1,32 @@
+{
+	"embeds": [
+    	{
+			{% if level == "warning" %}
+				"color": 16705372,
+			{% elif level == "critical" %}
+				"color": 15548997,
+			{% endif %}
+			"fields": [
+				{
+					{% if level == "warning" %}
+						"name": ":warning: {{ level.upper() }}",
+					{% elif level == "critical" %}
+						"name": ":no_entry: {{ level.upper() }}",
+					{% endif %}
+					"value": "_Website responded with a non acceptable status code_"
+				},
+				{
+					"name": "Website",
+					"value": "{{ website }}",
+					"inline": true
+				},
+				{
+					"name": "Status code",
+					"value": "{{ status_code }}",
+					"inline": true
+				}
+			]
+    	}
+	],
+	"username": "{{ username }}"
+}
